@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Document</title>
+</head>
+<body>
+    
+    <div class="middle">
+        <div class="multi-range-slider-litros">
+            <input type="range" id="input-left-litros" min="20" max="80" value="20" onchange="changeMinValueLitros()">
+            <input type="range" id="input-right-litros" min="20" max="80" value="80" onchange="changeMaxValueLitros()">
+    
+            <div class="slider">
+                <div class="track"></div>
+                <div class="range"></div>
+                <div class="thumb left"><span class="value-float" id="value-left-hide"><span id="min-value-float-litros">20</span> L</span></div>
+                <div class="thumb right"><span class="value-float"><span id="max-value-float-litros">80</span> L</span></div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <script>
+        const inputLeftLitros = document.getElementById("input-left-litros");
+        const inputRightLitros = document.getElementById("input-right-litros");
+
+        const thumbLeftLitros = document.querySelector(".multi-range-slider-litros .slider > .thumb.left");
+        const thumbRightLitros = document.querySelector(".multi-range-slider-litros .slider > .thumb.right");
+        const rangeLitros = document.querySelector(".multi-range-slider-litros .slider > .range");
+
+        function setLeftValueLitros() {
+            var _this = inputLeftLitros,
+                min = parseInt(_this.min),
+                max = parseInt(_this.max);
+
+            _this.value = Math.min(parseInt(_this.value), parseInt(inputRightLitros.value));
+
+            var percent = ((_this.value - min) / (max - min)) * 100;
+
+            thumbLeftLitros.style.left = percent + "%";
+            rangeLitros.style.left = percent + "%";
+        }
+        setLeftValueLitros();
+
+        function setRightValueLitros() {
+            var _this = inputRightLitros,
+                min = parseInt(_this.min),
+                max = parseInt(_this.max);
+
+            _this.value = Math.max(parseInt(_this.value), parseInt(inputLeftLitros.value));
+
+            var percent = ((_this.value - min) / (max - min)) * 100;
+
+            thumbRightLitros.style.right = (100 - percent) + "%";
+            rangeLitros.style.right = (100 - percent) + "%";
+        }
+        setRightValueLitros();
+
+        inputLeftLitros.addEventListener("input", setLeftValueLitros);
+        inputRightLitros.addEventListener("input", setRightValueLitros);
+
+        inputLeftLitros.addEventListener("mouseover", function() {
+            thumbLeftLitros.classList.add("hover");
+        });
+        inputLeftLitros.addEventListener("mouseout", function() {
+            thumbLeftLitros.classList.remove("hover");
+        });
+        inputLeftLitros.addEventListener("mousedown", function() {
+            thumbLeftLitros.classList.add("active");
+        });
+        inputLeftLitros.addEventListener("mouseup", function() {
+            thumbLeftLitros.classList.remove("active");
+        });
+
+        inputRightLitros.addEventListener("mouseover", function() {
+            thumbRightLitros.classList.add("hover");
+        });
+        inputRightLitros.addEventListener("mouseout", function() {
+            thumbRightLitros.classList.remove("hover");
+        });
+        inputRightLitros.addEventListener("mousedown", function() {
+            thumbRightLitros.classList.add("active");
+        });
+        inputRightLitros.addEventListener("mouseup", function() {
+            thumbRightLitros.classList.remove("active");
+        });
+
+        // Função que imprime o valor do range
+        const minValueFloatLitros = document.getElementById('min-value-float-litros');
+        const maxValueFloatLitros = document.getElementById('max-value-float-litros');
+        const valueLeftHide = document.getElementById('value-left-hide');
+
+        // Input range alterando o valor da div suspensa
+        function changeMinValueLitros() {
+            const _this = inputLeftLitros;
+            const _other = inputRightLitros;
+            const difference = Number(_other.value) - Number(_this.value);
+            
+            if (difference > 7) {
+                valueLeftHide.style.display = 'flex';
+                minValueFloatLitros.innerText = _this.value;
+                maxValueFloatLitros.innerText = _other.value;
+                maxValueFloatLitros.style.width = 'fit-content';
+            } else {
+                valueLeftHide.style.display = 'none';
+                maxValueFloatLitros.innerText = `${_this.value} - ${_other.value}`;
+                maxValueFloatLitros.style.width = '47px';
+            }
+        }
+
+        function changeMaxValueLitros() {
+            const _other = inputLeftLitros;
+            const _this = inputRightLitros;
+            const difference = Number(_this.value) - Number(_other.value);
+            
+            if (difference > 7) {
+                valueLeftHide.style.display = 'flex';
+                minValueFloatLitros.innerText = _other.value;
+                maxValueFloatLitros.innerText = _this.value;
+                maxValueFloatLitros.style.width = 'fit-content';
+            } else {
+                valueLeftHide.style.display = 'none';
+                maxValueFloatLitros.innerText = `${_other.value} - ${_this.value}`;
+                maxValueFloatLitros.style.width = '47px';
+            }
+        }
+    </script>
+</body>
+</html>
